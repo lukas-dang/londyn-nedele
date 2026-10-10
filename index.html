@@ -8,32 +8,25 @@
 <title>Neděle v Londýně</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <style>
 :root {
   --bg: #fff4f8;
   --card: #ffffff;
   --ink: #2f2a4a;
-  --muted: #7b7596;
+  --muted: #8a84a3;
   --rule: #f6dfea;
   --pink: #ff5c97;
-  --pink-soft: #ffe4ef;
-  --metro: #7b68ee;
-  --metro-soft: #ece9ff;
-  --bus: #ff9a3c;
-  --bus-soft: #fff0e1;
-  --walk: #ff5c97;
-  --walk-soft: #ffe4ef;
+  --mint: #3cc9a8;
   --sun: #ffc94d;
   --display: "Fredoka", "Nunito", system-ui, sans-serif;
   --body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.45; -webkit-text-size-adjust: 100%; }
-.wrap { max-width: 34rem; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom)); }
-a { color: inherit; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.4; -webkit-text-size-adjust: 100%; }
+.wrap { max-width: 32rem; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom)); }
 
 header { display: grid; gap: 4px; padding-bottom: 18px; }
 .kicker { font-family: var(--display); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); }
@@ -41,29 +34,22 @@ h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 9vw, 
 .sub { margin: 0; color: var(--muted); font-weight: 700; }
 
 ol.plan { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.stop { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 12px; align-items: center; background: var(--card); border-radius: 20px; padding: 11px 14px; box-shadow: 0 2px 0 var(--rule); }
-.badge { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: #fff; font-family: var(--display); font-weight: 700; font-size: 1.2rem; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(255, 92, 151, 0.35); }
-.badge.start { background: var(--sun); color: var(--ink); font-size: 0.68rem; box-shadow: 0 2px 8px rgba(255, 201, 77, 0.45); }
-.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
-.time { font-family: var(--display); font-weight: 600; color: var(--pink); font-variant-numeric: tabular-nums; }
-.name { font-family: var(--display); font-weight: 700; font-size: 1.15rem; text-decoration: none; }
-.name:hover, .name:focus-visible { text-decoration: underline; }
-.what { color: var(--muted); font-weight: 700; font-size: 0.95rem; }
-.move { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 12px; padding: 2px 14px; font-size: 0.93rem; }
-.move::before { content: ""; justify-self: center; width: 3px; border-radius: 2px; background: repeating-linear-gradient(var(--rule) 0 5px, transparent 5px 9px); }
-.move p { margin: 0; padding: 4px 0; }
-.chip { display: inline-block; font-weight: 800; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 999px; padding: 2px 9px; margin-right: 6px; vertical-align: 0.08em; white-space: nowrap; }
-.chip.metro { background: var(--metro-soft); color: var(--metro); }
-.chip.bus { background: var(--bus-soft); color: #c96a10; }
-.chip.walk { background: var(--walk-soft); color: #d63e7a; }
-.note { margin: 14px 0 0; padding: 12px 14px; border-radius: 18px; background: var(--card); color: var(--muted); font-weight: 700; font-size: 0.92rem; box-shadow: 0 2px 0 var(--rule); }
-.note strong { color: var(--ink); }
+ol.plan li { display: grid; grid-template-columns: 3.3rem 2.3rem minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 12px; border-radius: 18px; }
+ol.plan time { font-family: var(--display); font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+li.stop { background: var(--card); box-shadow: 0 2px 0 var(--rule); }
+li.stop time { color: var(--pink); }
+li.go { color: var(--muted); font-weight: 700; padding-block: 2px; }
+li.go time { color: var(--muted); font-size: 0.95rem; }
+.badge { width: 2.3rem; height: 2.3rem; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: #fff; font-family: var(--display); font-weight: 700; font-size: 1.1rem; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(255, 92, 151, 0.35); }
+.badge.food { background: var(--mint); box-shadow: 0 2px 8px rgba(60, 201, 168, 0.35); }
+.badge.end { background: var(--sun); color: var(--ink); font-size: 0.68rem; box-shadow: 0 2px 8px rgba(255, 201, 77, 0.45); }
+.mark { justify-self: center; color: var(--pink); font-weight: 800; }
+.name { font-family: var(--display); font-weight: 700; font-size: 1.12rem; color: var(--ink); text-decoration: none; }
+a.name:hover, a.name:focus-visible { text-decoration: underline; }
+.what { color: var(--muted); font-weight: 700; font-size: 0.95rem; margin-left: 6px; }
 
 h2 { font-family: var(--display); font-weight: 700; font-size: 1.4rem; margin: 26px 0 10px; }
 #map { height: 72vh; min-height: 420px; border-radius: 24px; overflow: hidden; background: #f2efe9; box-shadow: 0 3px 0 var(--rule), 0 10px 30px rgba(47, 42, 74, 0.08); }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; font-weight: 800; font-size: 0.9rem; }
-.legend span { display: inline-flex; align-items: center; gap: 8px; }
-.legend svg { display: block; }
 
 .pin { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: #fff; font-family: var(--display); font-weight: 700; font-size: 15px; border: 3px solid #fff; box-shadow: 0 3px 8px rgba(47, 42, 74, 0.3); }
 .pin.start { width: 54px; height: 26px; border-radius: 999px; background: var(--sun); color: var(--ink); font-size: 12px; }
@@ -74,7 +60,7 @@ h2 { font-family: var(--display); font-weight: 700; font-size: 1.4rem; margin: 2
 .arrow svg { display: block; }
 .reset { font-family: var(--display); font-weight: 600; font-size: 13px; color: var(--ink); background: #fff; border: 0; border-radius: 999px; padding: 7px 12px; box-shadow: 0 2px 8px rgba(47, 42, 74, 0.25); cursor: pointer; }
 .leaflet-container { font-family: var(--body); }
-a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -82,36 +68,28 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
   <header>
     <div class="kicker">Neděle 11. 10.</div>
     <h1>Neděle v Londýně</h1>
-    <p class="sub">Start v 10:15 u Aldgate East, zpátky kolem 18:00.</p>
+    <p class="sub">Vyrážíme v 10:15, zpátky kolem 18:00.</p>
   </header>
 
   <ol class="plan">
-    <li class="stop"><span class="badge start">start</span><div class="head"><span class="time">10:15</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Aldgate+East+Station">Aldgate East</a></div></li>
-    <li class="move"><p><span class="chip metro">metro</span>Hammersmith &amp; City do Liverpool Street, přestup na Central line do Holland Park, pak 15 min parkem</p></li>
-    <li class="stop"><span class="badge">1</span><div><div class="head"><span class="time">11:10</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Kyoto+Garden+Holland+Park+London">Kyoto Garden</a></div><div class="what">japonská zahrada, 30 min</div></div></li>
-    <li class="move"><p><span class="chip bus">autobus 9</span>9 min pěšky na Kensington High St, autobusem k Royal Albert Hall, 9 min pěšky</p></li>
-    <li class="stop"><span class="badge">2</span><div><div class="head"><span class="time">12:10</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Science+Museum+London">Science Museum</a></div><div class="what">Pokémon stezka, mapka v Energy Hall · 13:40 oběd</div></div></li>
-    <li class="move"><p><span class="chip metro">metro</span>15:10 Piccadilly line do Green Park, pak 10 min parkem</p></li>
-    <li class="stop"><span class="badge">3</span><div class="head"><span class="time">15:30</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Buckingham+Palace">Buckingham Palace</a></div></li>
-    <li class="move"><p><span class="chip walk">pěšky</span>11 min podél jezera</p></li>
-    <li class="stop"><span class="badge">4</span><div><div class="head"><span class="time">15:45</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Blue+Bridge+St+James%27s+Park+London">St James's Park</a></div><div class="what">jezero a most Blue Bridge</div></div></li>
-    <li class="move"><p><span class="chip metro">metro</span>9 min pěšky na Westminster, Jubilee do Southwark, 12 min pěšky</p></li>
-    <li class="stop"><span class="badge">5</span><div><div class="head"><span class="time">16:35</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Millennium+Bridge+London">Millennium Bridge</a></div><div class="what">ke katedrále St Paul's a zpátky</div></div></li>
-    <li class="move"><p><span class="chip walk">pěšky</span>25 min po nábřeží podél řeky</p></li>
-    <li class="stop"><span class="badge">6</span><div><div class="head"><span class="time">17:20</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Tower+Bridge+London">Tower Bridge</a></div><div class="what">přejít na druhou stranu</div></div></li>
-    <li class="move"><p><span class="chip metro">metro</span>7 min pěšky na Tower Hill, District 1 stanici do Aldgate East</p></li>
-    <li class="stop"><span class="badge start">cíl</span><div class="head"><span class="time">17:55</span><span class="name">Aldgate East</span></div></li>
+    <li class="go"><time>10:15</time><span class="mark">→</span><span>cesta do Kyoto Garden</span></li>
+    <li class="stop"><time>11:10</time><span class="badge">1</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Kyoto+Garden+Holland+Park+London">Kyoto Garden</a></li>
+    <li class="go"><time>11:40</time><span class="mark">→</span><span>cesta do Science Museum</span></li>
+    <li class="stop"><time>12:10</time><span class="badge">2</span><span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Science+Museum+London">Science Museum</a><span class="what">Pokémoni</span></span></li>
+    <li class="stop"><time>13:40</time><span class="badge food" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2.2 1.6-3 4.6-3 8h3v10"/></svg></span><span class="name">oběd</span></li>
+    <li class="go"><time>15:10</time><span class="mark">→</span><span>cesta k Buckingham Palace</span></li>
+    <li class="stop"><time>15:30</time><span class="badge">3</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Buckingham+Palace">Buckingham Palace</a></li>
+    <li class="stop"><time>15:45</time><span class="badge">4</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Blue+Bridge+St+James%27s+Park+London">St James's Park</a></li>
+    <li class="go"><time>16:15</time><span class="mark">→</span><span>cesta k Millennium Bridge</span></li>
+    <li class="stop"><time>16:35</time><span class="badge">5</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Millennium+Bridge+London">Millennium Bridge</a></li>
+    <li class="go"><time>16:50</time><span class="mark">→</span><span>procházka po nábřeží k Tower Bridge</span></li>
+    <li class="stop"><time>17:20</time><span class="badge">6</span><a class="name" href="https://www.google.com/maps/search/?api=1&amp;query=Tower+Bridge+London">Tower Bridge</a></li>
+    <li class="go"><time>17:35</time><span class="mark">→</span><span>cesta zpátky</span></li>
+    <li class="stop"><time>17:55</time><span class="badge end">cíl</span><span class="name">zpátky na Aldgate East</span></li>
   </ol>
 
-  <p class="note"><strong>Science Museum:</strong> vstupenka zdarma na 12:00-12:30. <strong>Metro a bus:</strong> každý svou kartou nebo mobilem, přiložit při vstupu i výstupu.</p>
-
   <h2>Mapa</h2>
-  <div id="map" role="img" aria-label="Mapa trasy po Londýně s očíslovanými zastávkami 1 až 6"></div>
-  <div class="legend">
-    <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="#7b68ee" stroke-width="5" stroke-linecap="round"/></svg>metro</span>
-    <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="#ff9a3c" stroke-width="5" stroke-dasharray="8 6"/></svg>autobus</span>
-    <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="#ff5c97" stroke-width="5" stroke-dasharray="0.1 8" stroke-linecap="round"/></svg>pěšky</span>
-  </div>
+  <div id="map" role="img" aria-label="Mapa trasy po Londýně, zastávky 1 až 6 spojené šipkami v pořadí"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -119,13 +97,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
 (function () {
   if (!window.L) return;
 
-  var COLOR = { metro: "#7b68ee", bus: "#ff9a3c", walk: "#ff5c97" };
-  var STYLE = {
-    metro: { color: COLOR.metro, weight: 5, opacity: 0.95 },
-    bus: { color: COLOR.bus, weight: 5, opacity: 0.95, dashArray: "10 9" },
-    walk: { color: COLOR.walk, weight: 5, opacity: 0.95, dashArray: "0.1 10", lineCap: "round" }
-  };
-
+  var PINK = "#ff5c97";
   var P = {
     start: [51.515037, -0.072384],
     kyoto: [51.503079, -0.204527],
@@ -135,32 +107,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
     millennium: [51.509888, -0.098508],
     tower: [51.505516, -0.075367]
   };
-  var S = {
-    liverpoolStreet: [51.51794, -0.083162], bank: [51.513395, -0.089095], stPauls: [51.514936, -0.097567],
-    chanceryLane: [51.518247, -0.111583], holborn: [51.51758, -0.120475], tottenhamCourtRoad: [51.516018, -0.130888],
-    oxfordCircus: [51.515224, -0.141903], bondStreet: [51.513362, -0.148795], marbleArch: [51.513424, -0.158953],
-    lancasterGate: [51.511723, -0.175494], queensway: [51.510312, -0.187152], nottingHillGate: [51.509128, -0.196104],
-    hollandPark: [51.507143, -0.205679], southKensington: [51.494094, -0.174138], knightsbridge: [51.501669, -0.160508],
-    hydeParkCorner: [51.503035, -0.152441], greenPark: [51.506947, -0.142787], westminster: [51.501603, -0.125984],
-    waterloo: [51.504269, -0.113356], southwark: [51.50427, -0.105331], towerHill: [51.509971, -0.076546]
-  };
+  var RIVERSIDE = [P.millennium, [51.5084, -0.0988], [51.5082, -0.0972], [51.5079, -0.0945], [51.5074, -0.0918], [51.5068, -0.0895], [51.5066, -0.0870], [51.5062, -0.0838], [51.5059, -0.0812], [51.5049, -0.0787], [51.5045, -0.0762], [51.5043, -0.0752], P.tower];
 
   var LEGS = [
-    { mode: "metro", path: [P.start, S.liverpoolStreet, S.bank, S.stPauls, S.chanceryLane, S.holborn, S.tottenhamCourtRoad, S.oxfordCircus, S.bondStreet, S.marbleArch, S.lancasterGate, S.queensway, S.nottingHillGate, S.hollandPark] },
-    { mode: "walk", path: [S.hollandPark, [51.5052, -0.2052], P.kyoto] },
-    { mode: "walk", path: [P.kyoto, [51.5003, -0.2000]] },
-    { mode: "bus", path: [[51.5003, -0.2000], [51.5013, -0.1920], [51.5021, -0.1860], [51.5020, -0.1776]] },
-    { mode: "walk", path: [[51.5020, -0.1776], [51.5017, -0.1745], [51.4980, -0.1745], P.science] },
-    { mode: "walk", path: [P.science, [51.4952, -0.1743], S.southKensington] },
-    { mode: "metro", path: [S.southKensington, S.knightsbridge, S.hydeParkCorner, S.greenPark] },
-    { mode: "walk", path: [S.greenPark, [51.5036, -0.1427], P.palace] },
-    { mode: "walk", path: [P.palace, [51.5017, -0.1398], P.blueBridge] },
-    { mode: "walk", path: [P.blueBridge, [51.5020, -0.1300], S.westminster] },
-    { mode: "metro", path: [S.westminster, S.waterloo, S.southwark] },
-    { mode: "walk", path: [S.southwark, [51.5062, -0.1035], [51.5074, -0.0993], [51.5084, -0.0988], P.millennium] },
-    { mode: "walk", path: [P.millennium, [51.5084, -0.0988], [51.5082, -0.0972], [51.5079, -0.0945], [51.5074, -0.0918], [51.5068, -0.0895], [51.5066, -0.0870], [51.5062, -0.0838], [51.5059, -0.0812], [51.5049, -0.0787], [51.5045, -0.0762], [51.5043, -0.0752], P.tower] },
-    { mode: "walk", path: [P.tower, [51.5067, -0.0757], S.towerHill] },
-    { mode: "metro", path: [S.towerHill, P.start] }
+    { from: P.start, to: P.kyoto, bulge: "N", k: 0.12, arrows: [0.25, 0.5, 0.75] },
+    { from: P.kyoto, to: P.science, bulge: "S", k: 0.18, arrows: [0.5] },
+    { from: P.science, to: P.palace, bulge: "S", k: 0.15, arrows: [0.5] },
+    { from: P.palace, to: P.blueBridge, bulge: "S", k: 0.25, arrows: [0.5] },
+    { from: P.blueBridge, to: P.millennium, bulge: "S", k: 0.12, arrows: [0.5] },
+    { path: RIVERSIDE, arrows: [0.35, 0.7] },
+    { from: P.tower, to: P.start, bulge: "E", k: 0.25, arrows: [0.5] }
   ];
 
   var STOPS = [
@@ -179,6 +135,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
     ["St Paul's", 51.5138, -0.0985], ["Tower of London", 51.5082, -0.0762], ["Temže", 51.5040, -0.1222, "water"]
   ];
 
+  var Z = 16;
   var map = L.map("map", { zoomControl: false, scrollWheelZoom: false, zoomSnap: 0.25, minZoom: 11, maxZoom: 18 });
   L.control.zoom({ position: "topright" }).addTo(map);
 
@@ -186,36 +143,45 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, attribution: attribution }).addTo(map);
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, minZoom: 15, zIndex: 2 }).addTo(map);
 
-  function legLength(path) {
-    var m = 0;
-    for (var i = 1; i < path.length; i++) m += L.latLng(path[i - 1]).distanceTo(L.latLng(path[i]));
-    return m;
+  var DIRS = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] };
+
+  function arcPoints(leg) {
+    var A = map.project(L.latLng(leg.from), Z), B = map.project(L.latLng(leg.to), Z);
+    var dx = B.x - A.x, dy = B.y - A.y, len = Math.sqrt(dx * dx + dy * dy);
+    var n1 = [-dy / len, dx / len], want = DIRS[leg.bulge];
+    var n = (n1[0] * want[0] + n1[1] * want[1]) >= 0 ? n1 : [-n1[0], -n1[1]];
+    var C = L.point((A.x + B.x) / 2 + n[0] * leg.k * len, (A.y + B.y) / 2 + n[1] * leg.k * len);
+    var pts = [];
+    for (var i = 0; i <= 40; i++) {
+      var t = i / 40, u = 1 - t;
+      pts.push(L.point(u * u * A.x + 2 * u * t * C.x + t * t * B.x, u * u * A.y + 2 * u * t * C.y + t * t * B.y));
+    }
+    return pts;
   }
 
-  function addArrows(path, color, layer) {
-    var meters = legLength(path);
-    var fractions = meters > 3000 ? [0.2, 0.5, 0.8] : meters > 1200 ? [0.35, 0.7] : meters > 250 ? [0.55] : [];
-    var pts = path.map(function (ll) { return map.project(L.latLng(ll), 16); });
+  function arrowAt(pts, fraction, layer) {
     var seg = [], total = 0;
     for (var i = 1; i < pts.length; i++) { var d = pts[i].distanceTo(pts[i - 1]); seg.push(d); total += d; }
-    fractions.forEach(function (f) {
-      var rest = total * f, k = 0;
-      while (k < seg.length - 1 && rest > seg[k]) { rest -= seg[k]; k++; }
-      var a = pts[k], b = pts[k + 1], t = seg[k] ? rest / seg[k] : 0;
-      var p = L.point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
-      var deg = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
-      var html = '<svg width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(' + deg + 'deg)"><path d="M6 4.5 L17 11 L6 17.5 Z" fill="' + color + '" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/></svg>';
-      L.marker(map.unproject(p, 16), { icon: L.divIcon({ className: "arrow", html: html, iconSize: [22, 22], iconAnchor: [11, 11] }), interactive: false, keyboard: false }).addTo(layer);
-    });
+    var rest = total * fraction, k = 0;
+    while (k < seg.length - 1 && rest > seg[k]) { rest -= seg[k]; k++; }
+    var a = pts[k], b = pts[k + 1], t = seg[k] ? rest / seg[k] : 0;
+    var p = L.point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+    var deg = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+    var html = '<svg width="24" height="24" viewBox="0 0 24 24" style="transform:rotate(' + deg + 'deg)"><path d="M6.5 5 L18.5 12 L6.5 19 Z" fill="' + PINK + '" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/></svg>';
+    L.marker(map.unproject(p, Z), { icon: L.divIcon({ className: "arrow", html: html, iconSize: [24, 24], iconAnchor: [12, 12] }), interactive: false, keyboard: false }).addTo(layer);
   }
 
   var casings = L.layerGroup().addTo(map);
   var lines = L.layerGroup().addTo(map);
   var arrows = L.layerGroup().addTo(map);
+  var drawn = [];
   LEGS.forEach(function (leg) {
-    L.polyline(leg.path, { color: "#ffffff", weight: 11, opacity: 0.92, lineCap: "round", lineJoin: "round", interactive: false }).addTo(casings);
-    L.polyline(leg.path, Object.assign({ lineJoin: "round", interactive: false }, STYLE[leg.mode])).addTo(lines);
-    addArrows(leg.path, COLOR[leg.mode], arrows);
+    var pts = leg.path ? leg.path.map(function (ll) { return map.project(L.latLng(ll), Z); }) : arcPoints(leg);
+    var latlngs = pts.map(function (p) { return map.unproject(p, Z); });
+    drawn = drawn.concat(latlngs);
+    L.polyline(latlngs, { color: "#ffffff", weight: 11, opacity: 0.92, lineCap: "round", lineJoin: "round", interactive: false }).addTo(casings);
+    L.polyline(latlngs, { color: PINK, weight: 5, opacity: 0.95, lineCap: "round", lineJoin: "round", interactive: false }).addTo(lines);
+    leg.arrows.forEach(function (f) { arrowAt(pts, f, arrows); });
   });
 
   var OFFSET = { right: [18, 0], left: [-18, 0], top: [0, -18], bottom: [0, 18] };
@@ -226,10 +192,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
       iconSize: s.start ? [54, 26] : [28, 28],
       iconAnchor: s.start ? [27, 13] : [14, 14]
     });
-    var offset = s.start ? [31, 0] : OFFSET[s.dir];
     L.marker(s.at, { icon: icon, zIndexOffset: s.start ? 500 : 1000, keyboard: false })
       .addTo(map)
-      .bindTooltip(s.label, { permanent: true, direction: s.dir, offset: offset, className: "lbl" });
+      .bindTooltip(s.label, { permanent: true, direction: s.dir, offset: s.start ? [31, 0] : OFFSET[s.dir], className: "lbl" });
   });
 
   var landmarks = L.layerGroup();
@@ -240,7 +205,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--metro); outline
     if (map.getZoom() >= 13.5) landmarks.addTo(map); else landmarks.remove();
   }
 
-  var bounds = L.latLngBounds([].concat.apply([], LEGS.map(function (l) { return l.path; })));
+  var bounds = L.latLngBounds(drawn);
   function fitAll() { map.fitBounds(bounds, { paddingTopLeft: [28, 46], paddingBottomRight: [28, 40] }); }
 
   var Reset = L.Control.extend({
