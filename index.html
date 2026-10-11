@@ -62,6 +62,7 @@ h2 { font-family: var(--display); font-weight: 700; font-size: 1.4rem; margin: 2
 .arrow svg { display: block; }
 .reset { font-family: var(--display); font-weight: 600; font-size: 13px; color: var(--ink); background: #fff; border: 0; border-radius: 999px; padding: 7px 12px; box-shadow: 0 2px 8px rgba(47, 42, 74, 0.25); cursor: pointer; }
 .leaflet-container { font-family: var(--body); }
+.leaflet-tile-pane { filter: saturate(0.7) brightness(1.04); }
 a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
 </style>
 </head>
@@ -124,13 +125,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   ];
 
   var STOPS = [
-    { at: P.start, text: "start", label: "Aldgate East · start i cíl", dir: "right", start: true },
-    { at: P.kyoto, text: "1", label: "Kyoto Garden", dir: "bottom" },
+    { at: P.kyoto, text: "1", label: "Kyoto Garden", dir: "top" },
     { at: P.science, text: "2", label: "Science Museum", dir: "left" },
     { at: P.palace, text: "3", label: "Buckingham Palace", dir: "bottom" },
     { at: P.blueBridge, text: "4", label: "St James's Park", dir: "top" },
     { at: P.millennium, text: "5", label: "Millennium Bridge", dir: "top" },
-    { at: P.tower, text: "6", label: "Tower Bridge", dir: "bottom" }
+    { at: P.tower, text: "6", label: "Tower Bridge", dir: "bottom" },
+    { at: P.start, text: "start", label: "Aldgate East", dir: "top", start: true }
   ];
 
   var LANDMARKS = [
@@ -140,12 +141,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   ];
 
   var Z = 16;
-  var map = L.map("map", { zoomControl: false, scrollWheelZoom: false, zoomSnap: 0.25, minZoom: 11, maxZoom: 18 });
+  var mapEl = document.getElementById("map");
+  var map = L.map(mapEl, { zoomControl: false, scrollWheelZoom: false, zoomSnap: 0.25, minZoom: 11, maxZoom: 18 });
   L.control.zoom({ position: "topright" }).addTo(map);
 
-  var attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, attribution: attribution }).addTo(map);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, minZoom: 15, zIndex: 2 }).addTo(map);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
 
   var DIRS = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] };
 
@@ -189,6 +189,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   });
 
   var OFFSET = { right: [18, 0], left: [-18, 0], top: [0, -18], bottom: [0, 18] };
+  var stopMarkers = [];
   STOPS.forEach(function (s) {
     var icon = L.divIcon({
       className: "",
@@ -196,15 +197,33 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
       iconSize: s.start ? [54, 26] : [28, 28],
       iconAnchor: s.start ? [27, 13] : [14, 14]
     });
-    L.marker(s.at, { icon: icon, zIndexOffset: s.start ? 500 : 1000, keyboard: false })
+    var marker = L.marker(s.at, { icon: icon, zIndexOffset: s.start ? 500 : 1000, keyboard: false })
       .addTo(map)
-      .bindTooltip(s.label, { permanent: true, direction: s.dir, offset: s.start ? [31, 0] : OFFSET[s.dir], className: "lbl" });
+      .bindTooltip(s.label, { permanent: true, direction: s.dir, offset: s.start ? [0, -16] : OFFSET[s.dir], className: "lbl" });
+    stopMarkers.push(marker);
   });
 
   var landmarks = L.layerGroup();
-  LANDMARKS.forEach(function (l) {
-    L.marker([l[1], l[2]], { icon: L.divIcon({ className: "lm" + (l[3] ? " " + l[3] : ""), html: "<span>" + l[0] + "</span>", iconSize: null }), interactive: false, keyboard: false }).addTo(landmarks);
+  var landmarkMarkers = LANDMARKS.map(function (l) {
+    return L.marker([l[1], l[2]], { icon: L.divIcon({ className: "lm" + (l[3] ? " " + l[3] : ""), html: "<span>" + l[0] + "</span>", iconSize: null }), interactive: false, keyboard: false }).addTo(landmarks);
   });
+
+  function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
+  function declutter() {
+    var box = mapEl.getBoundingClientRect();
+    var taken = stopMarkers.map(function (m) { return m.getElement().getBoundingClientRect(); });
+    Array.prototype.forEach.call(mapEl.querySelectorAll(".leaflet-control"), function (c) { taken.push(c.getBoundingClientRect()); });
+    function place(el) {
+      if (!el) return;
+      el.style.visibility = "";
+      var r = el.getBoundingClientRect();
+      var inside = r.left >= box.left + 2 && r.right <= box.right - 2 && r.top >= box.top + 2 && r.bottom <= box.bottom - 2;
+      var free = taken.every(function (t) { return !overlaps(r, t); });
+      if (inside && free) taken.push(r); else el.style.visibility = "hidden";
+    }
+    stopMarkers.forEach(function (m) { var tip = m.getTooltip(); place(tip && tip.getElement()); });
+    if (map.hasLayer(landmarks)) landmarkMarkers.forEach(function (m) { var el = m.getElement(); place(el && el.firstChild); });
+  }
   function toggleLandmarks() {
     if (map.getZoom() >= 13.5) landmarks.addTo(map); else landmarks.remove();
   }
@@ -226,8 +245,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   new Reset().addTo(map);
 
   map.on("zoomend", toggleLandmarks);
+  map.on("moveend", declutter);
   fitAll();
   toggleLandmarks();
+  declutter();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(declutter);
 })();
 </script>
 </body>
