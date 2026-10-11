@@ -211,7 +211,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
   function declutter() {
     var box = mapEl.getBoundingClientRect();
-    var taken = stopMarkers.map(function (m) { return m.getElement().getBoundingClientRect(); });
+    var taken = [];
+    stopMarkers.forEach(function (m) { var el = m.getElement(); if (el) taken.push(el.getBoundingClientRect()); });
     Array.prototype.forEach.call(mapEl.querySelectorAll(".leaflet-control"), function (c) { taken.push(c.getBoundingClientRect()); });
     function place(el) {
       if (!el) return;
@@ -245,9 +246,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--pink); outline-
   new Reset().addTo(map);
 
   map.on("zoomend", toggleLandmarks);
-  map.on("moveend", declutter);
   fitAll();
   toggleLandmarks();
+  map.on("moveend", declutter);
   declutter();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(declutter);
 })();
